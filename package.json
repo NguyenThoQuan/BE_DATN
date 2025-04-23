@@ -1,0 +1,24 @@
+{
+  "name": "json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node generate.js && node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@faker-js/faker": "^9.7.0",
+    "json-server": "^0.17.4",
+    "json-server-auth": "^2.1.0",
+    "nodemon": "^3.1.9"
+  },
+  "devDependencies": {
+    "query-string": "^9.1.1"
+  }
+}
