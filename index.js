@@ -1,6 +1,7 @@
 import queryString from "query-string";
 import jsonServer from "json-server";
 import auth from "json-server-auth";
+import bcrypt from "bcrypt";
 
 const server = jsonServer.create();
 const router = jsonServer.router("db.json");
@@ -49,6 +50,51 @@ router.render = (req, res) => {
 
   return res.jsonp(res.locals.data);
 };
+
+// Endpoint để đổi mật khẩu
+server.put("/api/change-password", async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+
+  // Kiểm tra các trường bắt buộc
+  if (!email || !oldPassword || !newPassword) {
+    return res.status(400).jsonp({
+      error: "Email, current password, and new password are required",
+    });
+  }
+
+  try {
+    // Tìm người dùng trong db.json
+    const db = router.db; // Lấy database
+    const user = db.get("users").find({ email }).value();
+
+    if (!user) {
+      return res.status(404).jsonp({ error: "Tài khoản không tồn tại !" });
+    }
+
+    // So sánh mật khẩu hiện tại
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .jsonp({ error: "Mật khẩu hiện tại không chính xác !" });
+    }
+
+    // Mã hóa mật khẩu mới
+    const saltRounds = 10;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Cập nhật mật khẩu mới trong database
+    db.get("users")
+      .find({ email })
+      .assign({ password: hashedNewPassword, updatedAt: Date.now() })
+      .write();
+
+    return res.jsonp({ message: "Đổi mật khẩu thành công !" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).jsonp({ error: "Có lỗi xảy ra ở máy chủ !" });
+  }
+});
 
 //bind the router db to server
 server.db = router.db;
