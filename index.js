@@ -18,9 +18,33 @@ server.get("/echo", (req, res) => {
 // To handle POST, PUT and PATCH you need to use a body-parser
 // You can use the one used by JSON Server
 server.use(jsonServer.bodyParser);
+
+// Middleware to add createdAt for all POST requests and createById, createByName for /api/build
 server.use((req, res, next) => {
   if (req.method === "POST") {
     req.body.createdAt = Date.now();
+
+    if (req.path === "/api/build") {
+      const userId = req.headers["x-user-id"]; // Lấy userId từ header
+      if (!userId) {
+        return res.status(400).jsonp({ error: "X-User-Id header is required" });
+      }
+
+      // Lấy database
+      const db = router.db;
+      const user = db
+        .get("users")
+        .find({ id: parseInt(userId) })
+        .value();
+
+      if (!user) {
+        return res.status(404).jsonp({ error: "User not found" });
+      }
+
+      // Thêm createById và createByName vào body
+      req.body.createById = user.id;
+      req.body.createByName = user.fullName;
+    }
   }
   // Continue to JSON Server router
   next();
@@ -28,7 +52,7 @@ server.use((req, res, next) => {
 
 // In this example, returned resources will be wrapped in a body property
 router.render = (req, res) => {
-  //Handle pagination
+  // Handle pagination
   const totalCountResponse = Number.parseInt(res.get("X-Total-Count"));
   console.log("totalCountResponse: ", totalCountResponse);
 
@@ -96,10 +120,10 @@ server.put("/api/change-password", async (req, res) => {
   }
 });
 
-//bind the router db to server
+// Bind the router db to server
 server.db = router.db;
 
-//apply the auth middleware
+// Apply the auth middleware
 server.use(auth);
 
 // Use default router
