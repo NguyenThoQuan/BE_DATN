@@ -93,7 +93,7 @@ server.get("/api/build/collab/:collabId", (req, res) => {
     // Lọc các bản ghi build
     const filteredBuilds = builds.filter((build) => {
       // Kiểm tra mode là "user"
-      const isModeUser = build.mode === "user";
+      const isModeUser = build.mode === "user" || "edit";
 
       // Kiểm tra collab.id
       const hasCollabId =

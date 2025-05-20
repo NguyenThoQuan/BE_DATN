@@ -35,16 +35,6 @@
       "createdAt": 1747726231977,
       "createById": 1,
       "createByName": "Admin",
-      "collab": [
-        {
-          "id": 2,
-          "fullName": "Nguyễn Thọ Quân"
-        },
-        {
-          "id": 3,
-          "fullName": "Quân"
-        }
-      ],
       "id": 1,
       "tableList": "on",
       "dataColumn": [
@@ -59,6 +49,13 @@
         {
           "accessorKey": "address",
           "header": "Địa chỉ"
+        }
+      ],
+      "collab": [
+        {
+          "id": 2,
+          "name": "Nguyễn Thọ Quân",
+          "email": "thoquan150903@gmail.com"
         }
       ]
     },
@@ -93,6 +90,14 @@
       "createById": 1,
       "createByName": "Admin",
       "id": 7
+    },
+    {
+      "name": "Quản lý kho",
+      "mode": "edit",
+      "createdAt": 1747751202965,
+      "createById": 2,
+      "createByName": "Nguyễn Thọ Quân",
+      "id": 8
     }
   ]
 }
