@@ -7,16 +7,12 @@ const server = jsonServer.create();
 const router = jsonServer.router("db.json");
 const middlewares = jsonServer.defaults();
 
-// Set default middlewares (logger, static, cors and no-cache)
 server.use(middlewares);
 
-// Add custom routes before JSON Server router
 server.get("/echo", (req, res) => {
   res.jsonp(req.query);
 });
 
-// To handle POST, PUT and PATCH you need to use a body-parser
-// You can use the one used by JSON Server
 server.use(jsonServer.bodyParser);
 
 // Middleware to add createdAt for all POST requests and createById, createByName for /api/build
@@ -74,6 +70,63 @@ router.render = (req, res) => {
 
   return res.jsonp(res.locals.data);
 };
+
+// Endpoint để lấy build theo collab.id
+server.get("/api/build/collab/:collabId", (req, res) => {
+  try {
+    const collabId = parseInt(req.params.collabId); // Lấy collabId từ params
+    if (isNaN(collabId)) {
+      return res.status(400).jsonp({ error: "collabId must be a number" });
+    }
+
+    const db = router.db; // Lấy database
+    const builds = db.get("build").value(); // Lấy tất cả bản ghi build
+
+    // Lấy query params
+    const queryParams = queryString.parse(req._parsedUrl.query);
+    const keySearch = queryParams.keySearch
+      ? queryParams.keySearch.toLowerCase()
+      : null;
+    const page = Number.parseInt(queryParams._page) || 1;
+    const limit = Number.parseInt(queryParams._limit) || 10;
+
+    // Lọc các bản ghi build
+    const filteredBuilds = builds.filter((build) => {
+      // Kiểm tra mode là "user"
+      const isModeUser = build.mode === "user";
+
+      // Kiểm tra collab.id
+      const hasCollabId =
+        build.collab && build.collab.some((collab) => collab.id === collabId);
+
+      // Kiểm tra keySearch (nếu có)
+      const matchesKeySearch = keySearch
+        ? build.name.toLowerCase().includes(keySearch)
+        : true;
+
+      // Trả về true nếu tất cả điều kiện đều thỏa mãn
+      return isModeUser && hasCollabId && matchesKeySearch;
+    });
+
+    // Xử lý phân trang
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedBuilds = filteredBuilds.slice(startIndex, endIndex);
+
+    // Trả về kết quả với status 200, kể cả khi filteredBuilds rỗng
+    res.status(200).jsonp({
+      data: paginatedBuilds,
+      pagination: {
+        _page: page,
+        _limit: limit,
+        _totalRows: filteredBuilds.length,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).jsonp({ error: "Server error" });
+  }
+});
 
 // Endpoint để đổi mật khẩu
 server.put("/api/change-password", async (req, res) => {

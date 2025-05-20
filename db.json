@@ -19,32 +19,80 @@
       "fullName": "Nguyễn Thọ Quân",
       "createdAt": 1747726275315,
       "id": 2
+    },
+    {
+      "email": "qn150923@gmail.com",
+      "password": "$2a$10$VNf6bnLU7ioXWvMigP3ODOfsozYNyPIOgjMWb/AFdpy/iACeZqAP.",
+      "fullName": "Quân",
+      "createdAt": 1747740871597,
+      "id": 3
     }
   ],
   "build": [
     {
-      "name": "Quản lí nhân sự",
-      "mode": "edit",
+      "name": "Quản lý nhân sự",
+      "mode": "user",
       "createdAt": 1747726231977,
       "createById": 1,
       "createByName": "Admin",
-      "id": 1
+      "collab": [
+        {
+          "id": 2,
+          "fullName": "Nguyễn Thọ Quân"
+        },
+        {
+          "id": 3,
+          "fullName": "Quân"
+        }
+      ],
+      "id": 1,
+      "tableList": "on",
+      "dataColumn": [
+        {
+          "accessorKey": "name",
+          "header": "Họ và tên"
+        },
+        {
+          "accessorKey": "phoneNumber",
+          "header": "Số điện thoại"
+        },
+        {
+          "accessorKey": "address",
+          "header": "Địa chỉ"
+        }
+      ]
     },
     {
-      "name": "Quản lý nhân sự",
+      "name": "Quản lý CSKH",
       "mode": "edit",
-      "createdAt": 1747726310508,
-      "createById": 2,
-      "createByName": "Nguyễn Thọ Quân",
-      "id": 2
+      "createdAt": 1747733249347,
+      "createById": 1,
+      "createByName": "Admin",
+      "id": 4
+    },
+    {
+      "name": "Quản lý đơn hàng",
+      "mode": "edit",
+      "createdAt": 1747733264901,
+      "createById": 1,
+      "createByName": "Admin",
+      "id": 5
     },
     {
       "name": "Quản lý bán hàng",
       "mode": "edit",
-      "createdAt": 1747726355741,
-      "createById": 2,
-      "createByName": "Nguyễn Thọ Quân",
-      "id": 3
+      "createdAt": 1747733274382,
+      "createById": 1,
+      "createByName": "Admin",
+      "id": 6
+    },
+    {
+      "name": "Quản lý kho",
+      "mode": "edit",
+      "createdAt": 1747733287824,
+      "createById": 1,
+      "createByName": "Admin",
+      "id": 7
     }
   ]
 }
