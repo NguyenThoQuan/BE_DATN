@@ -31,7 +31,7 @@
   "build": [
     {
       "name": "Quản lý nhân sự",
-      "mode": "user",
+      "mode": "edit",
       "createdAt": 1747726231977,
       "createById": 1,
       "createByName": "Admin",
@@ -65,7 +65,14 @@
       "createdAt": 1747733249347,
       "createById": 1,
       "createByName": "Admin",
-      "id": 4
+      "id": 4,
+      "collab": [
+        {
+          "id": 2,
+          "name": "Nguyễn Thọ Quân",
+          "email": "thoquan150903@gmail.com"
+        }
+      ]
     },
     {
       "name": "Quản lý đơn hàng",
