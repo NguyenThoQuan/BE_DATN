@@ -57,6 +57,23 @@
           "name": "Nguyễn Thọ Quân",
           "email": "thoquan150903@gmail.com"
         }
+      ],
+      "createTable": "on",
+      "dataTable": [
+        {
+          "id": 1,
+          "name": "Nguyễn Thọ Quân",
+          "phoneNumber": "0967724934",
+          "address": "Hà Nội",
+          "createdAt": 1748228986775
+        },
+        {
+          "id": 2,
+          "name": "Admin",
+          "phoneNumber": "098777777",
+          "address": "Hà Nội",
+          "createdAt": 1748229016432
+        }
       ]
     },
     {

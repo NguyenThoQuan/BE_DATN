@@ -46,6 +46,59 @@ server.use((req, res, next) => {
   next();
 });
 
+// Modified endpoint to add dataTable to a specific build
+server.post("/api/build/:buildId/dataTable", (req, res) => {
+  try {
+    const buildId = parseInt(req.params.buildId);
+    if (isNaN(buildId)) {
+      return res.status(400).jsonp({ error: "buildId must be a number" });
+    }
+
+    const db = router.db;
+    const build = db.get("build").find({ id: buildId }).value();
+
+    if (!build) {
+      return res.status(404).jsonp({ error: "Build not found" });
+    }
+
+    // Get the fields directly from request body
+    const fields = req.body;
+    if (!fields || Object.keys(fields).length === 0) {
+      return res.status(400).jsonp({ error: "Fields are required" });
+    }
+
+    // Generate new ID for dataTable
+    const dataTableArray = build.dataTable || [];
+    const newId =
+      dataTableArray.length > 0
+        ? Math.max(...dataTableArray.map((item) => item.id)) + 1
+        : 1;
+
+    // Create new dataTable entry with fields at the same level as id
+    const newDataTable = {
+      id: newId,
+      ...fields,
+      createdAt: Date.now(),
+    };
+
+    // Update the build with new dataTable
+    db.get("build")
+      .find({ id: buildId })
+      .assign({
+        dataTable: [...dataTableArray, newDataTable],
+      })
+      .write();
+
+    return res.status(200).jsonp({
+      message: "DataTable added successfully",
+      data: newDataTable,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).jsonp({ error: "Server error" });
+  }
+});
+
 // In this example, returned resources will be wrapped in a body property
 router.render = (req, res) => {
   // Handle pagination
