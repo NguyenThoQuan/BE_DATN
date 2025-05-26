@@ -85,7 +85,7 @@ server.post("/api/build/:buildId/dataTable", (req, res) => {
     db.get("build")
       .find({ id: buildId })
       .assign({
-        dataTable: [...dataTableArray, newDataTable],
+        dataTable: [newDataTable, ...dataTableArray],
       })
       .write();
 
