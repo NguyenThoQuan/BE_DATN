@@ -61,36 +61,47 @@ server.post("/api/build/:buildId/dataTable", (req, res) => {
       return res.status(404).jsonp({ error: "Build not found" });
     }
 
-    // Get the fields directly from request body
+    // Lấy dữ liệu từ body
     const fields = req.body;
     if (!fields || Object.keys(fields).length === 0) {
       return res.status(400).jsonp({ error: "Fields are required" });
     }
 
-    // Generate new ID for dataTable
+    // Tạo ID mới cho bản ghi dataTable
     const dataTableArray = build.dataTable || [];
     const newId =
       dataTableArray.length > 0
         ? Math.max(...dataTableArray.map((item) => item.id)) + 1
         : 1;
 
-    // Create new dataTable entry with fields at the same level as id
+    // Tạo bản ghi mới cho dataTable
     const newDataTable = {
       id: newId,
       ...fields,
       createdAt: Date.now(),
     };
 
-    // Update the build with new dataTable
+    // Cập nhật dataTable trong build
+    const updatedDataTable = [newDataTable, ...dataTableArray];
     db.get("build")
       .find({ id: buildId })
-      .assign({
-        dataTable: [newDataTable, ...dataTableArray],
-      })
+      .assign({ dataTable: updatedDataTable })
       .write();
 
+    // Tạo hoặc cập nhật bảng dataTableX (e.g., dataTable1 cho buildId = 1)
+    const tableName = `dataTable${buildId}`;
+    const existingTable = db.get(tableName).value();
+
+    if (!existingTable) {
+      // Nếu bảng chưa tồn tại, khởi tạo với dữ liệu từ dataTable của build
+      db.set(tableName, updatedDataTable).write();
+    } else {
+      // Nếu bảng đã tồn tại, cập nhật dữ liệu để đồng bộ với dataTable của build
+      db.set(tableName, updatedDataTable).write();
+    }
+
     return res.status(200).jsonp({
-      message: "DataTable added successfully",
+      message: "DataTable added successfully and synced to new table",
       data: newDataTable,
     });
   } catch (error) {

@@ -40,15 +40,13 @@
       "dataColumn": [
         {
           "accessorKey": "name",
-          "header": "Họ và tên"
-        },
-        {
-          "accessorKey": "phoneNumber",
-          "header": "Số điện thoại"
+          "header": "Họ và tên",
+          "search": true
         },
         {
           "accessorKey": "address",
-          "header": "Địa chỉ"
+          "header": "Địa chỉ",
+          "search": true
         }
       ],
       "collab": [
@@ -66,20 +64,19 @@
       "createTable": "off",
       "dataTable": [
         {
-          "id": 1,
-          "name": "Nguyễn Thọ Quân",
-          "phoneNumber": "0967724934",
-          "address": "Hà Nội",
-          "createdAt": 1748228986775
-        },
-        {
           "id": 2,
           "name": "Admin",
-          "phoneNumber": "098777777",
+          "address": "TP.HCM",
+          "createdAt": 1748882143732
+        },
+        {
+          "id": 1,
+          "name": "Nguyẽn Thọ Quân",
           "address": "Hà Nội",
-          "createdAt": 1748229016432
+          "createdAt": 1748882124361
         }
-      ]
+      ],
+      "editTable": "off"
     },
     {
       "name": "Quản lý CSKH",
@@ -127,6 +124,20 @@
       "createById": 2,
       "createByName": "Nguyễn Thọ Quân",
       "id": 8
+    }
+  ],
+  "dataTable1": [
+    {
+      "id": 2,
+      "name": "Admin",
+      "address": "TP.HCM",
+      "createdAt": 1748882143732
+    },
+    {
+      "id": 1,
+      "name": "Nguyẽn Thọ Quân",
+      "address": "Hà Nội",
+      "createdAt": 1748882124361
     }
   ]
 }
