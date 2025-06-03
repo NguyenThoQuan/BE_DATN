@@ -47,6 +47,10 @@
           "accessorKey": "address",
           "header": "Địa chỉ",
           "search": true
+        },
+        {
+          "accessorKey": "action",
+          "header": "Thao tác"
         }
       ],
       "collab": [
@@ -64,19 +68,14 @@
       "createTable": "off",
       "dataTable": [
         {
-          "id": 2,
-          "name": "Admin",
-          "address": "TP.HCM",
-          "createdAt": 1748882143732
-        },
-        {
           "id": 1,
           "name": "Nguyẽn Thọ Quân",
           "address": "Hà Nội",
           "createdAt": 1748882124361
         }
       ],
-      "editTable": "off"
+      "editTable": "off",
+      "deleteTable": "on"
     },
     {
       "name": "Quản lý CSKH",
@@ -127,12 +126,6 @@
     }
   ],
   "dataTable1": [
-    {
-      "id": 2,
-      "name": "Admin",
-      "address": "TP.HCM",
-      "createdAt": 1748882143732
-    },
     {
       "id": 1,
       "name": "Nguyẽn Thọ Quân",

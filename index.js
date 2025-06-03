@@ -110,6 +110,64 @@ server.post("/api/build/:buildId/dataTable", (req, res) => {
   }
 });
 
+// New endpoint to delete dataTable entry from a specific build
+server.delete("/api/build/:buildId/dataTable/:dataTableId", (req, res) => {
+  try {
+    const buildId = parseInt(req.params.buildId);
+    const dataTableId = parseInt(req.params.dataTableId);
+
+    if (isNaN(buildId) || isNaN(dataTableId)) {
+      return res
+        .status(400)
+        .jsonp({ error: "buildId and dataTableId must be numbers" });
+    }
+
+    const db = router.db;
+    const build = db.get("build").find({ id: buildId }).value();
+
+    if (!build) {
+      return res.status(404).jsonp({ error: "Build not found" });
+    }
+
+    const dataTableArray = build.dataTable || [];
+    const dataTableIndex = dataTableArray.findIndex(
+      (item) => item.id === dataTableId
+    );
+
+    if (dataTableIndex === -1) {
+      return res.status(404).jsonp({ error: "DataTable entry not found" });
+    }
+
+    // Remove the dataTable entry
+    const updatedDataTable = [
+      ...dataTableArray.slice(0, dataTableIndex),
+      ...dataTableArray.slice(dataTableIndex + 1),
+    ];
+
+    // Update dataTable in build
+    db.get("build")
+      .find({ id: buildId })
+      .assign({ dataTable: updatedDataTable })
+      .write();
+
+    // Update the corresponding dataTableX table
+    const tableName = `dataTable${buildId}`;
+    const existingTable = db.get(tableName).value();
+
+    if (existingTable) {
+      db.set(tableName, updatedDataTable).write();
+    }
+
+    return res.status(200).jsonp({
+      message: "DataTable entry deleted successfully",
+      data: { id: dataTableId },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).jsonp({ error: "Server error" });
+  }
+});
+
 // In this example, returned resources will be wrapped in a body property
 router.render = (req, res) => {
   // Handle pagination
