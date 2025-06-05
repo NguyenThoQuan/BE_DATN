@@ -49,6 +49,21 @@
           "search": true
         },
         {
+          "accessorKey": "phoneNumber",
+          "header": "Số điện thoại",
+          "search": false
+        },
+        {
+          "accessorKey": "email",
+          "header": "Email",
+          "search": false
+        },
+        {
+          "accessorKey": "gender",
+          "header": "Giới tính",
+          "search": false
+        },
+        {
           "accessorKey": "action",
           "header": "Thao tác"
         }
@@ -65,16 +80,24 @@
           "email": "qn150923@gmail.com"
         }
       ],
-      "createTable": "off",
+      "createTable": "on",
       "dataTable": [
         {
+          "id": 2,
+          "name": "Admin",
+          "address": "TP HCM",
+          "action": "",
+          "createdAt": 1749121399807
+        },
+        {
           "id": 1,
-          "name": "Nguyẽn Thọ Quân",
+          "name": "Nguyễn Thọ Quân",
           "address": "Hà Nội",
-          "createdAt": 1748882124361
+          "createdAt": 1748882124361,
+          "updatedAt": 1749121814101
         }
       ],
-      "editTable": "off",
+      "editTable": "on",
       "deleteTable": "on"
     },
     {
@@ -127,10 +150,18 @@
   ],
   "dataTable1": [
     {
+      "id": 2,
+      "name": "Admin",
+      "address": "TP HCM",
+      "action": "",
+      "createdAt": 1749121399807
+    },
+    {
       "id": 1,
-      "name": "Nguyẽn Thọ Quân",
+      "name": "Nguyễn Thọ Quân",
       "address": "Hà Nội",
-      "createdAt": 1748882124361
+      "createdAt": 1748882124361,
+      "updatedAt": 1749121814101
     }
   ]
 }

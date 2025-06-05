@@ -168,6 +168,94 @@ server.delete("/api/build/:buildId/dataTable/:dataTableId", (req, res) => {
   }
 });
 
+// Endpoint để cập nhật dataTable entry trong dataTable${buildId} và đồng bộ với dataTable trong build
+server.put("/api/build/:buildId/dataTable/:dataTableId", (req, res) => {
+  try {
+    const buildId = parseInt(req.params.buildId);
+    const dataTableId = parseInt(req.params.dataTableId);
+
+    if (isNaN(buildId) || isNaN(dataTableId)) {
+      return res
+        .status(400)
+        .jsonp({ error: "buildId and dataTableId must be numbers" });
+    }
+
+    const db = router.db;
+    const build = db.get("build").find({ id: buildId }).value();
+
+    if (!build) {
+      return res.status(404).jsonp({ error: "Build not found" });
+    }
+
+    const tableName = `dataTable${buildId}`;
+    const existingTable = db.get(tableName).value();
+
+    if (!existingTable) {
+      return res.status(404).jsonp({ error: `Table ${tableName} not found` });
+    }
+
+    const dataTableArray = build.dataTable || [];
+    const dataTableIndex = dataTableArray.findIndex(
+      (item) => item.id === dataTableId
+    );
+
+    if (dataTableIndex === -1) {
+      return res.status(404).jsonp({ error: "DataTable entry not found" });
+    }
+
+    // Lấy dữ liệu từ body
+    const updatedFields = req.body;
+    if (!updatedFields || Object.keys(updatedFields).length === 0) {
+      return res.status(400).jsonp({ error: "Fields are required" });
+    }
+
+    // Tạo bản ghi mới với các trường được cập nhật
+    const updatedDataTableEntry = {
+      ...dataTableArray[dataTableIndex],
+      ...updatedFields,
+      updatedAt: Date.now(),
+    };
+
+    // Cập nhật dataTable trong build
+    const updatedDataTable = [
+      ...dataTableArray.slice(0, dataTableIndex),
+      updatedDataTableEntry,
+      ...dataTableArray.slice(dataTableIndex + 1),
+    ];
+
+    db.get("build")
+      .find({ id: buildId })
+      .assign({ dataTable: updatedDataTable })
+      .write();
+
+    // Cập nhật bảng dataTable${buildId}
+    const tableData = db.get(tableName).value();
+    const tableIndex = tableData.findIndex((item) => item.id === dataTableId);
+
+    if (tableIndex === -1) {
+      return res
+        .status(404)
+        .jsonp({ error: `DataTable entry not found in ${tableName}` });
+    }
+
+    const updatedTableData = [
+      ...tableData.slice(0, tableIndex),
+      updatedDataTableEntry,
+      ...tableData.slice(tableIndex + 1),
+    ];
+
+    db.set(tableName, updatedTableData).write();
+
+    return res.status(200).jsonp({
+      message: "DataTable entry updated successfully and synced",
+      data: updatedDataTableEntry,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).jsonp({ error: "Server error" });
+  }
+});
+
 // In this example, returned resources will be wrapped in a body property
 router.render = (req, res) => {
   // Handle pagination
