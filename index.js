@@ -338,6 +338,62 @@ server.get("/api/build/collab/:collabId", (req, res) => {
   }
 });
 
+server.get("/api/build/staff/:staffId", (req, res) => {
+  try {
+    const staffId = parseInt(req.params.staffId); // Lấy staffId từ params
+    if (isNaN(staffId)) {
+      return res.status(400).jsonp({ error: "staffId must be a number" });
+    }
+
+    const db = router.db; // Lấy database
+    const builds = db.get("build").value(); // Lấy tất cả bản ghi build
+
+    // Lấy query params
+    const queryParams = queryString.parse(req._parsedUrl.query);
+    const keySearch = queryParams.keySearch
+      ? queryParams.keySearch.toLowerCase()
+      : null;
+    const page = Number.parseInt(queryParams._page) || 1;
+    const limit = Number.parseInt(queryParams._limit) || 10;
+
+    // Lọc các bản ghi build
+    const filteredBuilds = builds.filter((build) => {
+      // Kiểm tra mode là "user" hoặc "edit"
+      const isModeValid = build.mode === "user" || build.mode === "edit";
+
+      // Kiểm tra staff.id
+      const hasStaffId =
+        build.staff && build.staff.some((staff) => staff.id === staffId);
+
+      // Kiểm tra keySearch (nếu có)
+      const matchesKeySearch = keySearch
+        ? build.name.toLowerCase().includes(keySearch)
+        : true;
+
+      // Trả về true nếu tất cả điều kiện đều thỏa mãn
+      return isModeValid && hasStaffId && matchesKeySearch;
+    });
+
+    // Xử lý phân trang
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedBuilds = filteredBuilds.slice(startIndex, endIndex);
+
+    // Trả về kết quả với status 200, kể cả khi filteredBuilds rỗng
+    res.status(200).jsonp({
+      data: paginatedBuilds,
+      pagination: {
+        _page: page,
+        _limit: limit,
+        _totalRows: filteredBuilds.length,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).jsonp({ error: "Server error" });
+  }
+});
+
 // Endpoint để đổi mật khẩu
 server.put("/api/change-password", async (req, res) => {
   const { email, oldPassword, newPassword } = req.body;

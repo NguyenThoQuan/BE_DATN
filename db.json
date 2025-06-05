@@ -41,27 +41,16 @@
         {
           "accessorKey": "name",
           "header": "Họ và tên",
-          "search": true
+          "search": false,
+          "copy": false,
+          "size": "200"
         },
         {
           "accessorKey": "address",
           "header": "Địa chỉ",
-          "search": true
-        },
-        {
-          "accessorKey": "phoneNumber",
-          "header": "Số điện thoại",
-          "search": false
-        },
-        {
-          "accessorKey": "email",
-          "header": "Email",
-          "search": false
-        },
-        {
-          "accessorKey": "gender",
-          "header": "Giới tính",
-          "search": false
+          "search": false,
+          "copy": false,
+          "size": "200"
         },
         {
           "accessorKey": "action",
@@ -80,25 +69,26 @@
           "email": "qn150923@gmail.com"
         }
       ],
-      "createTable": "on",
+      "createTable": "off",
       "dataTable": [
         {
-          "id": 2,
-          "name": "Admin",
-          "address": "TP HCM",
-          "action": "",
-          "createdAt": 1749121399807
-        },
-        {
           "id": 1,
-          "name": "Nguyễn Thọ Quân",
+          "name": "Quân",
+          "action": "",
           "address": "Hà Nội",
-          "createdAt": 1748882124361,
-          "updatedAt": 1749121814101
+          "createdAt": 1749139198443
         }
       ],
       "editTable": "on",
-      "deleteTable": "on"
+      "deleteTable": "on",
+      "excel": "off",
+      "staff": [
+        {
+          "id": 2,
+          "name": "Nguyễn Thọ Quân",
+          "email": "thoquan150903@gmail.com"
+        }
+      ]
     },
     {
       "name": "Quản lý CSKH",
@@ -150,18 +140,11 @@
   ],
   "dataTable1": [
     {
-      "id": 2,
-      "name": "Admin",
-      "address": "TP HCM",
-      "action": "",
-      "createdAt": 1749121399807
-    },
-    {
       "id": 1,
-      "name": "Nguyễn Thọ Quân",
+      "name": "Quân",
+      "action": "",
       "address": "Hà Nội",
-      "createdAt": 1748882124361,
-      "updatedAt": 1749121814101
+      "createdAt": 1749139198443
     }
   ]
 }
